@@ -1,5 +1,3 @@
 ds-test/=lib/forge-std/lib/ds-test/src/
 forge-std/=lib/forge-std/src/
-erc721a/=node_modules/erc721a/
 @openzeppelin/=node_modules/@openzeppelin/
-operator-filter-registry/=node_modules/operator-filter-registry/
