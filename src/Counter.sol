@@ -1,67 +1,77 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
 
-contract Counter {
-    uint256 public number;
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {console2} from "forge-std/console2.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
-    }
+contract FrameGame is Ownable {
+    using Address for address;
 
-    function increment() public {
-        number++;
-    }
-}
-
-contract FrameGame {
     uint128 gameNumber;
 
     struct ActiveGame {
         uint128 id;
         address host;
-        uint128 p1score;
-        bool p1cig;
-        uint128 value;
-        bool active;
+        bool status;
     }
+
+    mapping(uint256 => ActiveGame) ActiveGames;
 
     ActiveGame[] public activeGames;
     FrameToken internal token;
 
-    event GameHosted(uint256 indexed _id);
     event GameCompleted(uint256 indexed _id);
-
-    // If player already hosting game
-    mapping(address => bool) hostingGame;
 
     constructor(address Ftoken) {
         token = FrameToken(Ftoken);
     }
 
-    // host a match
-    function hostMatch() public {}
-    // duel with another token
-    function duelAnotherToken() public {}
-    // add game
-    function addGame() public {}
-    // deactivate game
-    function deactivateGame() public {}
-    // join game
-    function joinGame() public {}
+    // set up some state so that a particular token id can only play once
+
     // determine winner
-    function determineWinner() public {}
-    // start game
-    function startGame() public {}
+    function determineWinner() internal pure returns (bool status) {
+        // actual function to determine winner
+        return true;
+    }
+
+    function runMatch() public returns (bool status) {
+        // start game
+        // call rng function to simlute fight
+        // winner of that random selection. wins
+
+        uint128 CurrentGameNumber = ++gameNumber;
+
+        (bool success) = determineWinner();
+
+        status = success;
+
+        // end game with stats
+        ActiveGames[CurrentGameNumber] = ActiveGame({id: CurrentGameNumber, host: msg.sender, status: status});
+
+        emit GameCompleted(CurrentGameNumber);
+
+        return status;
+    }
+
+    function AdminCallFunction(bytes calldata action, address target) public onlyOwner {
+        // call any function sent by admin
+        // in a case to send out valuable tokens sent to the contract on accident
+        (bytes memory data) = target.functionCall(action);
+        console2.log(string(data));
+    }
 }
 
-contract FrameToken {
-    constructor() {}
+contract FrameToken is ERC721, Ownable, ReentrancyGuard {
+    constructor(string memory _initBaseURI) ERC721("Knights Of Valour", "KOV") {}
 
-    // an onchain nft
-    // inherits from OZ
-    // some more good stuff
+    mapping(address => uint256) userMints;
 
-    // mint for all users
-
-    // tokens represent characters in the game
+    function mint() public {
+        console2.log(userMints[msg.sender]);
+        require(userMints[msg.sender] < 2, "cant have any more");
+        ++userMints[msg.sender];
+        super._mint(address(0), 0);
+    }
 }

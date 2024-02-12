@@ -4,17 +4,15 @@
   "main": "index.js",
   "author": "sudotx <64108848+sudotx@users.noreply.github.com>",
   "license": "MIT",
+  "scripts": {
+    "deploy-game": "forge create --rpc-url https://goerli.base.org --private-key 0x6cd7857a6039b77b668b48df9611685500e8854fbeb553eff711fb62ecbbb59e src/Counter:FrameGame",
+    "deploy-token": "forge create --rpc-url https://goerli.base.org --private-key 0x6cd7857a6039b77b668b48df9611685500e8854fbeb553eff711fb62ecbbb59e src/Counter:FrameToken",
+    "format": "forge fmt"
+  },
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.5",
-    "@nomiclabs/hardhat-waffle": "^2.0.3",
-    "chai": "^4.3.6",
-    "chai-as-promised": "^7.1.1",
-    "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.6.0",
-    "hardhat": "^2.9.1"
+    "ethers": "^5.6.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.5.0",
-    "merkletreejs": "^0.2.31"
+    "@openzeppelin/contracts": "^4.5.0"
   }
 }
